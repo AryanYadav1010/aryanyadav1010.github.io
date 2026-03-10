@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aryan Yadav | AI Engineer Portfolio</title>
+  <meta name="description"
+    content="Aryan Yadav — MSc AI at University of Bath. AI Software Developer specializing in NLP, Computer Vision, and LLM applications.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- ===== HUD OVERLAY ===== -->
+  <header id="hud" class="hud" aria-label="Game HUD">
+    <div class="hud__item">
+      <span class="hud__label">PLAYER</span>
+      <span class="hud__value" id="hud-player">ARYAN</span>
+    </div>
+    <div class="hud__item">
+      <span class="hud__label">SCORE</span>
+      <span class="hud__value" id="hud-score">000000</span>
+    </div>
+    <div class="hud__item">
+      <span class="hud__label">COINS</span>
+      <span class="hud__value"><span class="hud__coin-icon">●</span> × <span id="hud-coins">00</span></span>
+    </div>
+    <div class="hud__item">
+      <span class="hud__label">WORLD</span>
+      <span class="hud__value" id="hud-world">1-1</span>
+    </div>
+    <div class="hud__item">
+      <span class="hud__label">TIME</span>
+      <span class="hud__value" id="hud-time">400</span>
+    </div>
+  </header>
+
+  <!-- ===== NAV DOTS ===== -->
+  <nav id="nav-dots" class="nav-dots" aria-label="Section navigation">
+    <button class="nav-dot active" data-section="0" aria-label="Projects"></button>
+    <button class="nav-dot" data-section="1" aria-label="Experience"></button>
+    <button class="nav-dot" data-section="2" aria-label="Education"></button>
+    <button class="nav-dot" data-section="3" aria-label="Skills"></button>
+    <button class="nav-dot" data-section="4" aria-label="Contact"></button>
+  </nav>
+
+  <!-- ===== START SCREEN ===== -->
+  <div id="start-screen" class="start-screen">
+    <div class="start-screen__content">
+      <div class="start-screen__logo">
+        <div class="start-screen__title-line">SUPER</div>
+        <div class="start-screen__title-main">ARYAN</div>
+        <div class="start-screen__title-line">PORTFOLIO</div>
+      </div>
+      <p class="start-screen__bio">MSc Artificial Intelligence · University of Bath · AI Engineer</p>
+      <div class="start-screen__menu">
+        <p class="start-screen__option">► 1 PLAYER GAME</p>
+        <p class="start-screen__option start-screen__option--dim"> 2 PLAYER GAME</p>
+      </div>
+      <button id="start-btn" class="start-screen__btn" aria-label="Start game">
+        PRESS START
+      </button>
+      <p class="start-screen__copyright">© 2026 ARYAN YADAV</p>
+    </div>
+    <!-- Decorative elements -->
+    <div class="start-screen__cloud start-screen__cloud--1"></div>
+    <div class="start-screen__cloud start-screen__cloud--2"></div>
+    <div class="start-screen__cloud start-screen__cloud--3"></div>
+    <div class="start-screen__ground"></div>
+  </div>
+
+  <!-- ===== GAME WORLD (Horizontal Scroll Container) ===== -->
+  <div id="game-world" class="game-world" style="display:none;">
+
+    <!-- Parallax Background Layers -->
+    <div class="parallax">
+      <div class="parallax__layer parallax__layer--sky"></div>
+      <div class="parallax__layer parallax__layer--far-clouds" id="parallax-far"></div>
+      <div class="parallax__layer parallax__layer--near-clouds" id="parallax-near"></div>
+      <div class="parallax__layer parallax__layer--hills" id="parallax-hills"></div>
+    </div>
+
+    <!-- Scrollable Sections -->
+    <div id="sections-track" class="sections-track">
+
+      <!-- WORLD 1-1 -->
+      <section class="level-section" data-world="1-1" id="section-1">
+        <div class="level-section__header">
+          <div class="level-banner">PROJECTS</div>
+        </div>
+        <div class="level-section__card level-section__card--wide">
+          <div class="project-card">
+
+            <div class="project-card__info project-card__info--list">
+              <div class="project-list">
+                <div class="list-item">
+                  <h3 class="list-item__title">UnisonLLM <a href="https://unisonllm.com" target="_blank"
+                      class="link-mario">[Website]</a></h3>
+                  <p class="list-item__desc">Multi-Agent System coordinating 3 LLMs via consensus mechanism.</p>
+                  <div class="tech-tags"><span class="tag">FastAPI</span><span class="tag">Multi-Agent</span><span
+                      class="tag">Python</span></div>
+                </div>
+                <div class="list-item">
+                  <h3 class="list-item__title">Doodle Jump RL Agent</h3>
+                  <p class="list-item__desc">Trained DQN/PPO agents achieving 5,531 mean score (11% over human).</p>
+                  <div class="tech-tags"><span class="tag">PyTorch</span><span class="tag">OpenAI Gym</span></div>
+                </div>
+                <div class="list-item">
+                  <h3 class="list-item__title">MailCue</h3>
+                  <p class="list-item__desc">Built an automated event extraction system integrating Gmail API, Tesseract
+                    OCR, and NLP classification to parse calendar events from unstructured emails and PDFs, processing
+                    10,000+ emails.</p>
+                  <div class="tech-tags"><span class="tag">React</span><span class="tag">Node.js</span><span
+                      class="tag">MongoDB</span><span class="tag">Stripe API</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Decorative Elements -->
+        <div class="deco deco--question-block deco--q1" data-interactive="true"></div>
+        <div class="deco deco--question-block deco--q2" data-interactive="true"></div>
+        <div class="deco deco--pipe deco--pipe-right"></div>
+        <div class="deco deco--cloud deco--c1"></div>
+        <div class="deco deco--cloud deco--c2"></div>
+        <div class="deco deco--bush deco--b1"></div>
+        <div class="level-section__ground"></div>
+      </section>
+
+      <!-- WORLD 1-2 -->
+      <section class="level-section level-section--underground" data-world="1-2" id="section-2">
+        <div class="level-section__header">
+          <div class="level-banner">EXPERIENCE</div>
+        </div>
+        <div class="level-section__card level-section__card--wide">
+          <div class="project-card">
+
+            <div class="project-card__info project-card__info--list">
+              <div class="project-list">
+                <div class="list-item">
+                  <h3 class="list-item__title">AI Researcher @ UoB (Jan '26 - Present)</h3>
+                  <p class="list-item__desc">Developing convolutional autoencoders for EMG/EEG biosignal denoising with
+                    sub-10ms latency.</p>
+                </div>
+                <div class="list-item">
+                  <h3 class="list-item__title">AI Developer @ Exalt Data (Sep '24 - Aug '25)</h3>
+                  <p class="list-item__desc">Deployed 4-bit edge quantized LLM pipelines and automated OCR event
+                    extraction
+                    systems.</p>
+                </div>
+                <div class="list-item">
+                  <h3 class="list-item__title">Researcher @ NTU Taiwan (Jan - Jun '24)</h3>
+                  <p class="list-item__desc">Developed LSTM ensemble forecasting 50-year TWSE equities data with 86%
+                    accuracy.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="deco deco--brick deco--brick1"></div>
+        <div class="deco deco--brick deco--brick2"></div>
+        <div class="deco deco--question-block deco--q1" data-interactive="true"></div>
+        <div class="deco deco--pipe deco--pipe-right"></div>
+        <div class="deco deco--coin-float deco--cf1"></div>
+        <div class="deco deco--coin-float deco--cf2"></div>
+        <div class="deco deco--coin-float deco--cf3"></div>
+        <div class="level-section__ground level-section__ground--underground"></div>
+      </section>
+
+      <!-- WORLD 1-3 -->
+      <section class="level-section level-section--athletic" data-world="1-3" id="section-3">
+        <div class="level-section__header">
+          <div class="level-banner">EDUCATION</div>
+        </div>
+        <div class="level-section__card level-section__card--wide">
+          <div class="project-card">
+
+            <div class="project-card__info project-card__info--list">
+              <div class="project-list">
+                <div class="list-item">
+                  <h3 class="list-item__title">University of Bath (UoB)</h3>
+                  <p class="list-item__desc">MSc Artificial Intelligence (Bath Merit Scholar)<br>Bath, United Kingdom
+                    (Sept
+                    2025 - Present)</p>
+                </div>
+                <div class="list-item">
+                  <h3 class="list-item__title">Bennett University</h3>
+                  <p class="list-item__desc">B.Tech Computer Science (First Class)<br>Noida, India (Aug 2020 - Jun 2024)
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="deco deco--cloud deco--c1"></div>
+        <div class="deco deco--cloud deco--c2"></div>
+        <div class="deco deco--cloud deco--c3"></div>
+        <div class="deco deco--question-block deco--q1" data-interactive="true"></div>
+        <div class="deco deco--question-block deco--q3" data-interactive="true"></div>
+        <div class="deco deco--mushroom-platform deco--mp1"></div>
+        <div class="deco deco--mushroom-platform deco--mp2"></div>
+        <div class="level-section__ground level-section__ground--athletic"></div>
+      </section>
+
+      <!-- WORLD 1-4 (Castle) -->
+      <section class="level-section level-section--castle" data-world="1-4" id="section-4">
+        <div class="level-section__header">
+          <div class="level-banner">SKILLS</div>
+        </div>
+        <div class="level-section__card level-section__card--wide">
+          <div class="project-card">
+
+            <div class="project-card__info project-card__info--list">
+              <div class="project-list">
+                <div class="list-item">
+                  <h3 class="list-item__title">Languages</h3>
+                  <p class="list-item__desc">Python, SQL, JavaScript, HTML/CSS, Java, C/C++</p>
+                </div>
+                <div class="list-item">
+                  <h3 class="list-item__title">ML & AI Tools</h3>
+                  <p class="list-item__desc">PyTorch, TensorFlow, Hugging Face, Scikit-learn, OpenAI Gym, LangChain, RAG
+                  </p>
+                </div>
+                <div class="list-item">
+                  <h3 class="list-item__title">Developer Tools</h3>
+                  <p class="list-item__desc">FastAPI, Flask, Docker, Git, GCP, VS Code</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="deco deco--lava deco--lava1"></div>
+        <div class="deco deco--firebar deco--fb1"></div>
+        <div class="deco deco--question-block deco--q1" data-interactive="true"></div>
+        <div class="deco deco--axe" id="castle-axe"></div>
+        <div class="level-section__ground level-section__ground--castle"></div>
+      </section>
+
+      <!-- END SCREEN — Castle Clear -->
+      <section class="level-section level-section--end" data-world="END" id="section-end">
+        <div class="end-screen">
+          <div class="end-screen__flag">
+            <div class="flagpole">
+              <div class="flagpole__pole"></div>
+              <div class="flagpole__flag"></div>
+              <div class="flagpole__ball"></div>
+            </div>
+          </div>
+          <div class="end-screen__content">
+            <h2 class="end-screen__title">GOT TO THE END!</h2>
+            <p class="end-screen__subtitle">LET'S CONNECT</p>
+            <div class="end-screen__score-tally">
+              <div class="tally-row">
+                <span>Location</span>
+                <span>Bath, UK</span>
+              </div>
+              <div class="tally-row">
+                <span>Phone</span>
+                <span>07818799380</span>
+              </div>
+            </div>
+            <div class="end-screen__contact">
+              <h3 class="end-screen__contact-title">CONTINUE? LET'S CONNECT!</h3>
+              <div class="end-screen__links">
+                <a href="mailto:aryan95yadav@gmail.com" class="contact-link" data-sound="powerup">
+                  <span class="contact-link__icon">✉</span>
+                  <span class="contact-link__text">EMAIL</span>
+                </a>
+                <a href="https://github.com/AryanYadav1010" target="_blank" rel="noopener" class="contact-link"
+                  data-sound="coin">
+                  <span class="contact-link__icon">◆</span>
+                  <span class="contact-link__text">GITHUB</span>
+                </a>
+                <a href="https://linkedin.com/in/aryanyadav1010" target="_blank" rel="noopener" class="contact-link"
+                  data-sound="coin">
+                  <span class="contact-link__icon">■</span>
+                  <span class="contact-link__text">LINKEDIN</span>
+                </a>
+              </div>
+            </div>
+            <button id="restart-btn" class="start-screen__btn" aria-label="Play again">
+              PLAY AGAIN?
+            </button>
+          </div>
+          <div class="end-screen__castle">
+            <div class="castle">
+              <div class="castle__tower castle__tower--left"></div>
+              <div class="castle__body"></div>
+              <div class="castle__tower castle__tower--right"></div>
+              <div class="castle__door"></div>
+              <div class="castle__window castle__window--1"></div>
+              <div class="castle__window castle__window--2"></div>
+              <div class="castle__window castle__window--3"></div>
+            </div>
+          </div>
+        </div>
+        <div class="level-section__ground"></div>
+      </section>
+
+    </div><!-- /sections-track -->
+
+    <!-- Mario Character -->
+    <div id="mario-character" class="mario-character">
+      <div class="mario-sprite"></div>
+    </div>
+
+  </div><!-- /game-world -->
+
+  <!-- Mobile Controls -->
+  <div id="mobile-controls" class="mobile-controls" style="display:none;">
+    <button class="mobile-controls__btn mobile-controls__btn--left" id="mobile-left" aria-label="Scroll left">◄</button>
+    <button class="mobile-controls__btn mobile-controls__btn--right" id="mobile-right"
+      aria-label="Scroll right">►</button>
+  </div>
+
+  <!-- Hamburger Menu Button (mobile) -->
+  <button id="hamburger" class="hamburger" aria-label="Open menu">
+    <span class="hamburger__bar"></span>
+    <span class="hamburger__bar"></span>
+    <span class="hamburger__bar"></span>
+  </button>
+
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile navigation">
+    <button class="mobile-menu__item" data-section="0">
+      <span class="mobile-menu__item-icon">★</span> PROJECTS
+    </button>
+    <button class="mobile-menu__item" data-section="1">
+      <span class="mobile-menu__item-icon">★</span> EXPERIENCE
+    </button>
+    <button class="mobile-menu__item" data-section="2">
+      <span class="mobile-menu__item-icon">★</span> EDUCATION
+    </button>
+    <button class="mobile-menu__item" data-section="3">
+      <span class="mobile-menu__item-icon">★</span> SKILLS
+    </button>
+    <button class="mobile-menu__item" data-section="4">
+      <span class="mobile-menu__item-icon">🏁</span> CONTACT
+    </button>
+  </nav>
+
+  <!-- Tutorial Overlay (first load) -->
+  <div id="tutorial-overlay" class="tutorial-overlay">
+    <div class="tutorial-overlay__swipe"></div>
+    <p class="tutorial-overlay__text">
+      <span>SWIPE</span> or use <span>ARROW KEYS</span><br>
+      to navigate between levels.<br><br>
+      Tap <span>?</span> blocks and <span>coins</span><br>
+      to earn points!
+    </p>
+    <button id="tutorial-dismiss" class="tutorial-overlay__dismiss">GOT IT!</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
