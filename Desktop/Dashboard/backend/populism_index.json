@@ -1,0 +1,537 @@
+{
+  "ALB": {
+    "name": "Albania",
+    "value": 0.857,
+    "year": 2022
+  },
+  "AUT": {
+    "name": "Austria",
+    "value": 0.537,
+    "year": 2023
+  },
+  "BEL": {
+    "name": "Belgium",
+    "value": 0.266,
+    "year": 2024
+  },
+  "BLR": {
+    "name": "Belarus",
+    "value": 0.868,
+    "year": 2025
+  },
+  "BIH": {
+    "name": "Bosnia and Herzegovina",
+    "value": 0.163,
+    "year": 2022
+  },
+  "BGR": {
+    "name": "Bulgaria",
+    "value": 0.512,
+    "year": 2026
+  },
+  "HRV": {
+    "name": "Croatia",
+    "value": 0.983,
+    "year": 2024
+  },
+  "CZE": {
+    "name": "Czechia",
+    "value": 0.403,
+    "year": 2023
+  },
+  "CYP": {
+    "name": "Cyprus",
+    "value": 0.322,
+    "year": 2023
+  },
+  "DNK": {
+    "name": "Denmark",
+    "value": 0.432,
+    "year": 2022
+  },
+  "EST": {
+    "name": "Estonia",
+    "value": 0.243,
+    "year": 2023
+  },
+  "FIN": {
+    "name": "Finland",
+    "value": 0.201,
+    "year": 2023
+  },
+  "FRA": {
+    "name": "France",
+    "value": 0.708,
+    "year": 2022
+  },
+  "GEO": {
+    "name": "Georgia",
+    "value": 0.641,
+    "year": 2024
+  },
+  "DEU": {
+    "name": "Germany",
+    "value": 0.228,
+    "year": 2025
+  },
+  "GRC": {
+    "name": "Greece",
+    "value": 0.262,
+    "year": 2023
+  },
+  "HUN": {
+    "name": "Hungary",
+    "value": 0.886,
+    "year": 2022
+  },
+  "IRL": {
+    "name": "Ireland",
+    "value": 0.274,
+    "year": 2024
+  },
+  "ITA": {
+    "name": "Italy",
+    "value": 0.58,
+    "year": 2022
+  },
+  "LVA": {
+    "name": "Latvia",
+    "value": 0.296,
+    "year": 2022
+  },
+  "LTU": {
+    "name": "Lithuania",
+    "value": 0.543,
+    "year": 2020
+  },
+  "MKD": {
+    "name": "North Macedonia",
+    "value": 0.815,
+    "year": 2024
+  },
+  "MDA": {
+    "name": "Moldova, Republic of",
+    "value": 0.816,
+    "year": 2021
+  },
+  "NLD": {
+    "name": "Netherlands",
+    "value": 0.272,
+    "year": 2023
+  },
+  "NOR": {
+    "name": "Norway",
+    "value": 0.238,
+    "year": 2025
+  },
+  "POL": {
+    "name": "Poland",
+    "value": 0.436,
+    "year": 2023
+  },
+  "PRT": {
+    "name": "Portugal",
+    "value": 0.228,
+    "year": 2025
+  },
+  "ROU": {
+    "name": "Romania",
+    "value": 0.41,
+    "year": 2025
+  },
+  "RUS": {
+    "name": "Russian Federation",
+    "value": 0.873,
+    "year": 2024
+  },
+  "SRB": {
+    "name": "Serbia",
+    "value": 0.713,
+    "year": 2022
+  },
+  "SVK": {
+    "name": "Slovakia",
+    "value": 0.371,
+    "year": 2023
+  },
+  "SVN": {
+    "name": "Slovenia",
+    "value": 0.566,
+    "year": 2026
+  },
+  "ESP": {
+    "name": "Spain",
+    "value": 0.293,
+    "year": 2023
+  },
+  "SWE": {
+    "name": "Sweden",
+    "value": 0.205,
+    "year": 2022
+  },
+  "CHE": {
+    "name": "Switzerland",
+    "value": 0.29,
+    "year": 2023
+  },
+  "UKR": {
+    "name": "Ukraine",
+    "value": 0.87,
+    "year": 2019
+  },
+  "GBR": {
+    "name": "United Kingdom",
+    "value": 0.143,
+    "year": 2024
+  },
+  "ARM": {
+    "name": "Armenia",
+    "value": 0.539,
+    "year": 2021
+  },
+  "AZE": {
+    "name": "Azerbaijan",
+    "value": 0.921,
+    "year": 2024
+  },
+  "BGD": {
+    "name": "Bangladesh",
+    "value": 0.817,
+    "year": 2026
+  },
+  "KHM": {
+    "name": "Cambodia",
+    "value": 0.445,
+    "year": 2023
+  },
+  "CHN": {
+    "name": "China",
+    "value": 1.0,
+    "year": 2023
+  },
+  "IND": {
+    "name": "India",
+    "value": 0.517,
+    "year": 2024
+  },
+  "IDN": {
+    "name": "Indonesia",
+    "value": 0.49,
+    "year": 2024
+  },
+  "ISR": {
+    "name": "Israel",
+    "value": 0.399,
+    "year": 2023
+  },
+  "JPN": {
+    "name": "Japan",
+    "value": 0.557,
+    "year": 2026
+  },
+  "JOR": {
+    "name": "Jordan",
+    "value": 0.337,
+    "year": 2024
+  },
+  "KAZ": {
+    "name": "Kazakhstan",
+    "value": 0.71,
+    "year": 2019
+  },
+  "KGZ": {
+    "name": "Kyrgyzstan",
+    "value": 0.798,
+    "year": 2021
+  },
+  "LBN": {
+    "name": "Lebanon",
+    "value": 0.384,
+    "year": 2022
+  },
+  "MYS": {
+    "name": "Malaysia",
+    "value": 0.915,
+    "year": 2022
+  },
+  "NPL": {
+    "name": "Nepal",
+    "value": 0.613,
+    "year": 2026
+  },
+  "PAK": {
+    "name": "Pakistan",
+    "value": 0.312,
+    "year": 2024
+  },
+  "PHL": {
+    "name": "Philippines",
+    "value": 0.482,
+    "year": 2022
+  },
+  "SAU": {
+    "name": "Saudi Arabia",
+    "value": 1.0,
+    "year": 2026
+  },
+  "KOR": {
+    "name": "Korea, Republic of",
+    "value": 0.902,
+    "year": 2025
+  },
+  "LKA": {
+    "name": "Sri Lanka",
+    "value": 0.523,
+    "year": 2022
+  },
+  "TWN": {
+    "name": "Taiwan, Province of China",
+    "value": 0.451,
+    "year": 2024
+  },
+  "THA": {
+    "name": "Thailand",
+    "value": 0.277,
+    "year": 2023
+  },
+  "TUR": {
+    "name": "Türkiye",
+    "value": 0.623,
+    "year": 2024
+  },
+  "AUS": {
+    "name": "Australia",
+    "value": 0.086,
+    "year": 2025
+  },
+  "NZL": {
+    "name": "New Zealand",
+    "value": 0.147,
+    "year": 2023
+  },
+  "ARG": {
+    "name": "Argentina",
+    "value": 1.0,
+    "year": 2023
+  },
+  "BLZ": {
+    "name": "Belize",
+    "value": 0.596,
+    "year": 2020
+  },
+  "BOL": {
+    "name": "Bolivia, Plurinational State of",
+    "value": 0.551,
+    "year": 2020
+  },
+  "BRA": {
+    "name": "Brazil",
+    "value": 1.0,
+    "year": 2022
+  },
+  "CHL": {
+    "name": "Chile",
+    "value": 0.582,
+    "year": 2025
+  },
+  "COL": {
+    "name": "Colombia",
+    "value": 1.0,
+    "year": 2022
+  },
+  "CRI": {
+    "name": "Costa Rica",
+    "value": 0.689,
+    "year": 2022
+  },
+  "DOM": {
+    "name": "Dominican Republic",
+    "value": 0.383,
+    "year": 2020
+  },
+  "ECU": {
+    "name": "Ecuador",
+    "value": 0.444,
+    "year": 2025
+  },
+  "GTM": {
+    "name": "Guatemala",
+    "value": 0.391,
+    "year": 2023
+  },
+  "GUY": {
+    "name": "Guyana",
+    "value": 0.499,
+    "year": 2020
+  },
+  "HND": {
+    "name": "Honduras",
+    "value": 0.588,
+    "year": 2025
+  },
+  "MEX": {
+    "name": "Mexico",
+    "value": 0.612,
+    "year": 2024
+  },
+  "NIC": {
+    "name": "Nicaragua",
+    "value": 0.742,
+    "year": 2021
+  },
+  "PAN": {
+    "name": "Panama",
+    "value": 0.588,
+    "year": 2004
+  },
+  "PRY": {
+    "name": "Paraguay",
+    "value": 0.523,
+    "year": 2023
+  },
+  "PER": {
+    "name": "Peru",
+    "value": 0.774,
+    "year": 2021
+  },
+  "SUR": {
+    "name": "Suriname",
+    "value": 0.458,
+    "year": 2025
+  },
+  "URY": {
+    "name": "Uruguay",
+    "value": 0.026,
+    "year": 2024
+  },
+  "VEN": {
+    "name": "Venezuela, Bolivarian Republic of",
+    "value": 0.52,
+    "year": 2024
+  },
+  "USA": {
+    "name": "United States",
+    "value": 0.498,
+    "year": 2024
+  },
+  "CAN": {
+    "name": "Canada",
+    "value": 0.476,
+    "year": 2025
+  },
+  "NGA": {
+    "name": "Nigeria",
+    "value": 1.0,
+    "year": 2026
+  },
+  "ETH": {
+    "name": "Ethiopia",
+    "value": 0.892,
+    "year": 2021
+  },
+  "COD": {
+    "name": "Congo, The Democratic Republic of the",
+    "value": 0.183,
+    "year": 2023
+  },
+  "ZAF": {
+    "name": "South Africa",
+    "value": 0.262,
+    "year": 2024
+  },
+  "KEN": {
+    "name": "Kenya",
+    "value": 0.981,
+    "year": 2022
+  },
+  "UGA": {
+    "name": "Uganda",
+    "value": 0.964,
+    "year": 2026
+  },
+  "DZA": {
+    "name": "Algeria",
+    "value": 0.843,
+    "year": 2024
+  },
+  "MAR": {
+    "name": "Morocco",
+    "value": 0.314,
+    "year": 2021
+  },
+  "MOZ": {
+    "name": "Mozambique",
+    "value": 0.242,
+    "year": 2024
+  },
+  "GHA": {
+    "name": "Ghana",
+    "value": 0.982,
+    "year": 2024
+  },
+  "MLI": {
+    "name": "Mali",
+    "value": 1.0,
+    "year": 2026
+  },
+  "BFA": {
+    "name": "Burkina Faso",
+    "value": 1.0,
+    "year": 2026
+  },
+  "MWI": {
+    "name": "Malawi",
+    "value": 0.562,
+    "year": 2025
+  },
+  "ZMB": {
+    "name": "Zambia",
+    "value": 0.387,
+    "year": 2021
+  },
+  "SEN": {
+    "name": "Senegal",
+    "value": 0.611,
+    "year": 2024
+  },
+  "ZWE": {
+    "name": "Zimbabwe",
+    "value": 0.966,
+    "year": 2023
+  },
+  "GIN": {
+    "name": "Guinea",
+    "value": 1.0,
+    "year": 2026
+  },
+  "TUN": {
+    "name": "Tunisia",
+    "value": 0.907,
+    "year": 2024
+  },
+  "LBR": {
+    "name": "Liberia",
+    "value": 0.494,
+    "year": 2023
+  },
+  "CAF": {
+    "name": "Central African Republic",
+    "value": 0.762,
+    "year": 2025
+  },
+  "GAB": {
+    "name": "Gabon",
+    "value": 0.948,
+    "year": 2025
+  },
+  "LSO": {
+    "name": "Lesotho",
+    "value": 0.389,
+    "year": 2022
+  },
+  "GNB": {
+    "name": "Guinea-Bissau",
+    "value": 0.476,
+    "year": 2025
+  }
+}

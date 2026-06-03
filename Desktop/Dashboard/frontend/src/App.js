@@ -39,7 +39,7 @@ function App() {
         setIndicators([
           { id: "liberal", name: "Liberal Democracy", lower_is_better: false },
           { id: "gender_inequality", name: "Gender Inequality", lower_is_better: true },
-          { id: "populism", name: "Populism", lower_is_better: false },
+          { id: "populism", name: "Populism", lower_is_better: true },
           { id: "combined", name: "Combined Index", lower_is_better: false }
         ]);
       }

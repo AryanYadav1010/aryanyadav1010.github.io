@@ -1,0 +1,162 @@
+{
+  "design_system": {
+    "identity": {
+      "name": "Rebalance Global Observatory",
+      "persona": "The Midnight Policy Room",
+      "tone": "Authoritative, Serious, Research-Driven, Minimalist",
+      "theme_mode": "dark"
+    },
+    "typography": {
+      "font_family": {
+        "headings": "Playfair Display, serif",
+        "body": "Inter, sans-serif",
+        "mono": "JetBrains Mono, monospace"
+      },
+      "scale": {
+        "h1": "text-4xl md:text-5xl font-bold tracking-tight",
+        "h2": "text-3xl font-semibold tracking-tight",
+        "h3": "text-2xl font-medium",
+        "body_lg": "text-lg leading-relaxed",
+        "body_base": "text-base leading-relaxed text-muted-foreground",
+        "caption": "text-sm text-muted-foreground uppercase tracking-widest"
+      },
+      "imports": [
+        "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;600;700&display=swap');"
+      ]
+    },
+    "colors": {
+      "palette": {
+        "background": "#020617",
+        "surface": "#0f172a",
+        "surface_highlight": "#1e293b",
+        "primary": "#3b82f6",
+        "primary_foreground": "#ffffff",
+        "secondary": "#64748b",
+        "accent": "#0ea5e9",
+        "text_primary": "#f8fafc",
+        "text_secondary": "#94a3b8",
+        "border": "#1e293b",
+        "success": "#10b981",
+        "warning": "#f59e0b",
+        "error": "#ef4444"
+      },
+      "map_styles": {
+        "default": {
+          "fill": "#1e293b",
+          "stroke": "#334155",
+          "strokeWidth": 0.5,
+          "outline": "none"
+        },
+        "hover": {
+          "fill": "#3b82f6",
+          "stroke": "#60a5fa",
+          "strokeWidth": 0.75,
+          "outline": "none",
+          "cursor": "pointer"
+        },
+        "pressed": {
+          "fill": "#2563eb",
+          "stroke": "#60a5fa",
+          "strokeWidth": 1,
+          "outline": "none"
+        }
+      }
+    },
+    "layout": {
+      "grid_system": "Bento Grid Mode B (High Density)",
+      "spacing": {
+        "container_padding": "p-6 md:p-8",
+        "section_gap": "gap-8",
+        "item_gap": "gap-4"
+      },
+      "z_index": {
+        "map": 0,
+        "overlay_controls": 10,
+        "side_panel": 50,
+        "modal": 100
+      }
+    },
+    "visual_enhancers": {
+      "glassmorphism": "bg-slate-950/80 backdrop-blur-md border border-slate-800/50 shadow-xl",
+      "shadows": {
+        "card": "shadow-[0_8px_30px_rgb(0,0,0,0.12)]",
+        "floating": "shadow-[0_20px_50px_rgb(0,0,0,0.5)]"
+      },
+      "borders": "border border-slate-800",
+      "radius": "rounded-xl"
+    },
+    "assets": {
+      "images": {
+        "wave_texture": "https://images.unsplash.com/photo-1591563700236-e5994c3e5685?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHw0fHxhYnN0cmFjdCUyMGRhcmslMjBibHVlJTIwd2F2ZSUyMHRleHR1cmUlMjBiYWNrZ3JvdW5kfGVufDB8fHx8MTc3MDA4NjM5OHww&ixlib=rb-4.1.0&q=85",
+        "news_fallback": "https://images.unsplash.com/photo-1732113865152-e379cc71b038?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAxODF8MHwxfHNlYXJjaHwxfHxnbG9iYWwlMjBwb2xpdGljcyUyMG5ld3MlMjBhYnN0cmFjdHxlbnwwfHx8fDE3NzAwODY0MDJ8MA&ixlib=rb-4.1.0&q=85"
+      },
+      "icons": "lucide-react"
+    }
+  },
+  "components": {
+    "map_container": {
+      "description": "Full-screen interactive map container using react-simple-maps",
+      "specs": "h-screen w-full bg-[#020617] relative overflow-hidden",
+      "instructions": "Use ComposableMap, Geographies, Geography, and ZoomableGroup. Implement smooth zoom and pan."
+    },
+    "search_overlay": {
+      "description": "Floating search bar to jump to countries",
+      "specs": "absolute top-6 left-6 z-10 w-full max-w-sm",
+      "component": "Command (Shadcn)",
+      "style": "glassmorphism"
+    },
+    "side_panel": {
+      "description": "Slide-out panel for country details and news",
+      "component": "Sheet (Shadcn)",
+      "specs": "w-full sm:max-w-xl border-l border-slate-800 bg-slate-950/95 backdrop-blur-xl",
+      "header_style": "relative overflow-hidden pb-6 border-b border-slate-800"
+    },
+    "news_card": {
+      "description": "Individual news item card",
+      "component": "Card (Shadcn)",
+      "specs": "bg-slate-900/50 border-slate-800 hover:bg-slate-900 transition-colors cursor-pointer group",
+      "layout": "flex gap-4 p-4 items-start"
+    }
+  },
+  "implementation_steps": [
+    {
+      "step": 1,
+      "action": "Setup Global Styles",
+      "details": "Update index.css with the 'Midnight Policy' color variables and import fonts."
+    },
+    {
+      "step": 2,
+      "action": "Install Dependencies",
+      "details": "npm install react-simple-maps d3-scale d3-tooltip lucide-react date-fns"
+    },
+    {
+      "step": 3,
+      "action": "Create Map Component",
+      "details": "Build the interactive world map with hover states and click handlers that trigger the side panel."
+    },
+    {
+      "step": 4,
+      "action": "Build Side Panel & News Logic",
+      "details": "Implement the Sheet component. Create a mock news service (or real API) that fetches data based on the selected country."
+    },
+    {
+      "step": 5,
+      "action": "Integrate Search",
+      "details": "Add the Command palette to filter and jump to countries on the map."
+    }
+  ],
+  "universal_guidelines": {
+    "do_not": [
+      "Use gradients for text",
+      "Use pure black (#000000)",
+      "Center align long text blocks",
+      "Use generic 'Loading...' text (use Skeletons)"
+    ],
+    "must_do": [
+      "Add data-testid to all interactive elements",
+      "Ensure 100% mobile responsiveness (stack panels on mobile)",
+      "Use 'sonner' for error toasts",
+      "Maintain the 'Serious Policy' tone in all micro-copy"
+    ]
+  }
+}

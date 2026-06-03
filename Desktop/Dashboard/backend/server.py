@@ -12,6 +12,7 @@ from datetime import datetime, timezone, timedelta
 import aiohttp
 import asyncio
 import ssl
+import pycountry
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -24,6 +25,10 @@ db = client[os.environ['DB_NAME']]
 # NewsAPI configuration
 NEWSAPI_KEY = os.environ.get('NEWSAPI_KEY', '')
 NEWSAPI_BASE_URL = "https://newsapi.org/v2"
+
+# NewsData.io configuration
+NEWSDATA_KEY = os.environ.get('NEWSDATA_KEY', '')
+NEWSDATA_BASE_URL = "https://newsdata.io/api/1"
 
 # Create the main app
 app = FastAPI(title="Rebalance Global Observatory API", version="1.0.0")
@@ -306,7 +311,7 @@ async def close_session():
         _session = None
 
 # News API Service
-async def fetch_news_from_api(
+async def fetch_news_from_newsapi(
     country_code: str,
     category: Optional[str] = None,
     query: Optional[str] = None,
@@ -314,29 +319,26 @@ async def fetch_news_from_api(
     page: int = 1,
     page_size: int = 10
 ) -> Dict[str, Any]:
-    """Fetch news from NewsAPI.org using the 'everything' endpoint for all countries"""
+    """Helper to fetch from original NewsAPI.org when key is available"""
     if not NEWSAPI_KEY:
         logger.warning("NewsAPI key not configured, returning mock data")
         return generate_mock_news(country_code)
-    
+
     session = await get_session()
-    
-    # Always use 'everything' endpoint with country name for reliable results
+
     url = f"{NEWSAPI_BASE_URL}/everything"
     country_name = COUNTRY_DATA.get(country_code.lower(), {}).get("name", country_code)
     search_query = f'"{country_name}"'
     if query:
         search_query = f'{search_query} AND {query}'
-    
-    # Append indicator-specific keywords to narrow results to relevant topics
+
     if indicator and indicator in INDICATOR_KEYWORDS:
         indicator_terms = INDICATOR_KEYWORDS[indicator]
         search_query = f'{search_query} AND ({indicator_terms})'
         logger.info(f"Applying indicator keywords for '{indicator}' to news query for {country_name}")
 
-    
     from_date = (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%d")
-    
+
     params = {
         "apiKey": NEWSAPI_KEY,
         "q": search_query,
@@ -346,24 +348,119 @@ async def fetch_news_from_api(
         "page": page,
         "from": from_date
     }
-    
+
     try:
         async with session.get(url, params=params) as response:
             data = await response.json()
-            
+
             if data.get("status") != "ok":
                 error_msg = data.get("message", "Unknown error")
                 logger.error(f"NewsAPI error for {country_name}: {error_msg}")
                 return generate_mock_news(country_code)
-            
+
             if data.get("totalResults", 0) == 0:
                 logger.info(f"No news found for {country_name}, returning mock data")
                 return generate_mock_news(country_code)
-            
+
             return data
     except Exception as e:
         logger.error(f"Error fetching news for {country_name}: {str(e)}")
         return generate_mock_news(country_code)
+
+
+async def fetch_news_from_api(
+    country_code: str,
+    category: Optional[str] = None,
+    query: Optional[str] = None,
+    indicator: Optional[str] = None,
+    page: int = 1,
+    page_size: int = 10
+) -> Dict[str, Any]:
+    """Fetch news from NewsData.io (primary) or NewsAPI.org (fallback)"""
+    # Simplified indicator keywords for NewsData.io (no exclusions, simpler syntax)
+    NEWSDATA_INDICATOR_KEYWORDS = {
+        "liberal": "democracy OR \"civil liberties\" OR \"rule of law\" OR \"press freedom\"",
+        "gender_inequality": "\"gender equality\" OR \"women's rights\" OR \"equal pay\" OR \"gender gap\"",
+        "populism": "populism OR \"far right\" OR nationalism OR \"anti-establishment\"",
+        "combined": "governance OR democracy OR \"human rights\" OR \"political stability\"",
+    }
+    if NEWSDATA_KEY:
+        session = await get_session()
+        url = f"{NEWSDATA_BASE_URL}/news"
+        country_name = COUNTRY_DATA.get(country_code.lower(), {}).get("name", country_code)
+        search_query = f'"{country_name}"'
+        if query:
+            search_query = f'{search_query} AND {query}'
+
+        if indicator and indicator in NEWSDATA_INDICATOR_KEYWORDS:
+            indicator_terms = NEWSDATA_INDICATOR_KEYWORDS[indicator]
+            search_query = f'{search_query} AND ({indicator_terms})'
+            logger.info(f"Applying indicator keywords for '{indicator}' to news query for {country_name} (NewsData.io)")
+
+        params = {
+            "apikey": NEWSDATA_KEY,
+            "q": search_query,
+            "language": "en",
+            "country": country_code.lower(),
+        }
+
+        try:
+            async with session.get(url, params=params) as response:
+                if response.status != 200:
+                    logger.error(f"NewsData.io returned status {response.status} for {country_name}")
+                    if NEWSAPI_KEY:
+                        logger.info("Falling back to NewsAPI.org")
+                        return await fetch_news_from_newsapi(country_code, category, query, indicator, page, page_size)
+                    return generate_mock_news(country_code)
+
+                data = await response.json()
+                if data.get("status") != "success":
+                    error_msg = data.get("results", {}).get("message", "Unknown NewsData.io error")
+                    logger.error(f"NewsData.io error for {country_name}: {error_msg}")
+                    if NEWSAPI_KEY:
+                        logger.info("Falling back to NewsAPI.org")
+                        return await fetch_news_from_newsapi(country_code, category, query, indicator, page, page_size)
+                    return generate_mock_news(country_code)
+
+                results = data.get("results", [])
+                if not results:
+                    logger.info(f"No news found for {country_name} on NewsData.io")
+                    if NEWSAPI_KEY:
+                        logger.info("Falling back to NewsAPI.org")
+                        return await fetch_news_from_newsapi(country_code, category, query, indicator, page, page_size)
+                    return generate_mock_news(country_code)
+
+                mapped_articles = []
+                for result in results:
+                    mapped_articles.append({
+                        "source": {
+                            "id": result.get("source_id"),
+                            "name": result.get("source_id", "Unknown Source")
+                        },
+                        "author": result.get("creator", [None])[0] if isinstance(result.get("creator"), list) and result.get("creator") else None,
+                        "title": result.get("title", "No Title"),
+                        "description": result.get("description"),
+                        "url": result.get("link", "#"),
+                        "urlToImage": result.get("image_url"),
+                        "publishedAt": result.get("pubDate", datetime.now(timezone.utc).isoformat()),
+                        "content": result.get("content")
+                    })
+
+                total_results = data.get("totalResults", len(mapped_articles))
+                return {
+                    "status": "ok",
+                    "totalResults": total_results,
+                    "articles": mapped_articles
+                }
+        except Exception as e:
+            logger.error(f"Error fetching news from NewsData.io for {country_name}: {str(e)}")
+            if NEWSAPI_KEY:
+                logger.info("Falling back to NewsAPI.org")
+                return await fetch_news_from_newsapi(country_code, category, query, indicator, page, page_size)
+            return generate_mock_news(country_code)
+    else:
+        return await fetch_news_from_newsapi(country_code, category, query, indicator, page, page_size)
+
 
 def generate_mock_news(country_code: str) -> Dict[str, Any]:
     """Generate mock news for demo purposes when API is unavailable"""
@@ -479,29 +576,25 @@ async def get_country_info(country_code: str):
         "newsapi_supported": code in NEWSAPI_SUPPORTED_COUNTRIES
     }
 
-@api_router.get("/news/top-headlines")
-async def get_top_headlines(
-    country: str = Query("us", description="Country code for headlines"),
-    category: Optional[str] = Query(None, description="Category: general, business, technology, science, health"),
-    page_size: int = Query(12, ge=1, le=50)
-):
-    """Get top headlines — global latest news"""
-    effective_category = category or "general"
-    
+def return_mock_headlines(effective_category: str, page_size: int):
+    mock = generate_mock_global_headlines(effective_category)
+    return {
+        "status": "ok",
+        "total_results": mock["totalResults"],
+        "articles": mock["articles"][:page_size],
+        "category": effective_category,
+        "is_mock": True
+    }
+
+
+async def get_newsapi_top_headlines(country: str, category: Optional[str], page_size: int, effective_category: str):
     if not NEWSAPI_KEY:
         logger.info("NewsAPI key not configured, returning mock headlines")
-        mock = generate_mock_global_headlines(effective_category)
-        return {
-            "status": "ok",
-            "total_results": mock["totalResults"],
-            "articles": mock["articles"][:page_size],
-            "category": effective_category,
-            "is_mock": True
-        }
-    
+        return return_mock_headlines(effective_category, page_size)
+
     session = await get_session()
     url = f"{NEWSAPI_BASE_URL}/top-headlines"
-    
+
     params = {
         "apiKey": NEWSAPI_KEY,
         "country": country.lower(),
@@ -509,22 +602,15 @@ async def get_top_headlines(
     }
     if category:
         params["category"] = category
-    
+
     try:
         async with session.get(url, params=params) as response:
             data = await response.json()
-            
+
             if data.get("status") != "ok":
                 logger.error(f"NewsAPI headlines error: {data.get('message')}")
-                mock = generate_mock_global_headlines(effective_category)
-                return {
-                    "status": "ok",
-                    "total_results": mock["totalResults"],
-                    "articles": mock["articles"][:page_size],
-                    "category": effective_category,
-                    "is_mock": True
-                }
-            
+                return return_mock_headlines(effective_category, page_size)
+
             return {
                 "status": "ok",
                 "total_results": data.get("totalResults", 0),
@@ -534,14 +620,80 @@ async def get_top_headlines(
             }
     except Exception as e:
         logger.error(f"Error fetching top headlines: {str(e)}")
-        mock = generate_mock_global_headlines(effective_category)
-        return {
-            "status": "ok",
-            "total_results": mock["totalResults"],
-            "articles": mock["articles"][:page_size],
-            "category": effective_category,
-            "is_mock": True
+        return return_mock_headlines(effective_category, page_size)
+
+
+@api_router.get("/news/top-headlines")
+async def get_top_headlines(
+    country: str = Query("us", description="Country code for headlines"),
+    category: Optional[str] = Query(None, description="Category: general, business, technology, science, health"),
+    page_size: int = Query(12, ge=1, le=50)
+):
+    """Get top headlines — global latest news"""
+    effective_category = category or "general"
+
+    if NEWSDATA_KEY:
+        session = await get_session()
+        url = f"{NEWSDATA_BASE_URL}/latest"
+
+        params = {
+            "apikey": NEWSDATA_KEY,
+            "country": country.lower(),
+            "language": "en",
         }
+        if category:
+            params["category"] = category
+
+        try:
+            async with session.get(url, params=params) as response:
+                if response.status != 200:
+                    logger.error(f"NewsData.io headlines returned status {response.status}")
+                    if NEWSAPI_KEY:
+                        logger.info("Falling back to NewsAPI.org for top headlines")
+                        return await get_newsapi_top_headlines(country, category, page_size, effective_category)
+                    return return_mock_headlines(effective_category, page_size)
+
+                data = await response.json()
+                if data.get("status") != "success":
+                    error_msg = data.get("results", {}).get("message", "Unknown error")
+                    logger.error(f"NewsData.io headlines error: {error_msg}")
+                    if NEWSAPI_KEY:
+                        logger.info("Falling back to NewsAPI.org for top headlines")
+                        return await get_newsapi_top_headlines(country, category, page_size, effective_category)
+                    return return_mock_headlines(effective_category, page_size)
+
+                results = data.get("results", [])
+                mapped_articles = []
+                for result in results:
+                    mapped_articles.append({
+                        "source": {
+                            "id": result.get("source_id"),
+                            "name": result.get("source_id", "Unknown Source")
+                        },
+                        "author": result.get("creator", [None])[0] if isinstance(result.get("creator"), list) and result.get("creator") else None,
+                        "title": result.get("title", "No Title"),
+                        "description": result.get("description"),
+                        "url": result.get("link", "#"),
+                        "urlToImage": result.get("image_url"),
+                        "publishedAt": result.get("pubDate", datetime.now(timezone.utc).isoformat()),
+                        "content": result.get("content")
+                    })
+
+                return {
+                    "status": "ok",
+                    "total_results": data.get("totalResults", len(mapped_articles)),
+                    "articles": mapped_articles[:page_size],
+                    "category": effective_category,
+                    "is_mock": False
+                }
+        except Exception as e:
+            logger.error(f"Error fetching top headlines from NewsData.io: {str(e)}")
+            if NEWSAPI_KEY:
+                logger.info("Falling back to NewsAPI.org for top headlines")
+                return await get_newsapi_top_headlines(country, category, page_size, effective_category)
+            return return_mock_headlines(effective_category, page_size)
+    else:
+        return await get_newsapi_top_headlines(country, category, page_size, effective_category)
 
 @api_router.get("/news/{country_code}", response_model=NewsResponse)
 async def get_country_news(
@@ -769,10 +921,38 @@ INDICATOR_METADATA = {
 
 # Indicator-specific search keywords for news filtering
 INDICATOR_KEYWORDS = {
-    "liberal": 'democracy OR "civil liberties" OR "rule of law" OR "human rights" OR elections OR "press freedom" OR "political rights"',
-    "gender_inequality": '"gender equality" OR "women\'s rights" OR feminism OR discrimination OR "gender gap" OR "reproductive rights"',
-    "populism": 'populism OR "far right" OR "far left" OR "political polarization" OR nationalism OR "authoritarian" OR "anti-establishment"',
-    "combined": 'governance OR democracy OR "human rights" OR policy OR "civil society" OR "rule of law"',
+    # Liberal Democracy — shortened to fit 500 char limit
+    "liberal": (
+        '((democracy OR "civil liberties" OR "rule of law" OR "human rights" OR elections '
+        'OR "press freedom" OR "political rights" OR "free speech" OR "judicial independence" '
+        'OR "democratic backsliding" OR "civil society" OR "freedom of expression") '
+        'AND (politics OR government OR governance)) '
+        '-sports -football -soccer -basketball -tennis -cricket '
+        '-entertainment -celebrity -music -movie -recipe -fashion -gaming -weather'
+    ),
+    # Gender Inequality — shortened to fit 500 char limit
+    "gender_inequality": (
+        '(( "gender equality" OR "women\'s rights" OR feminism OR discrimination '
+        'OR "gender gap" OR "reproductive rights" OR "gender-based violence" '
+        'OR "equal pay" OR "women in politics" OR "maternal health" OR "gender parity") '
+        'AND (policy OR rights OR society)) '
+        '-sports -entertainment -celebrity -music -movie -recipe -fashion -gaming -weather'
+    ),
+    # Populism — shortened to fit 500 char limit
+    "populism": (
+        '((populism OR "far right" OR "far left" OR "political polarization" '
+        'OR nationalism OR authoritarian OR "anti-establishment" OR "democratic erosion" '
+        'OR "illiberal democracy" OR "political extremism") '
+        'AND (politics OR movement OR party)) '
+        '-sports -entertainment -celebrity -music -movie -recipe -fashion -gaming -weather'
+    ),
+    # Combined — shortened to fit 500 char limit
+    "combined": (
+        '((governance OR democracy OR "human rights" OR policy OR "civil society" '
+        'OR "rule of law" OR "political stability" OR "institutional reform") '
+        'AND (government OR politics OR international)) '
+        '-sports -entertainment -celebrity -music -movie -recipe -fashion -gaming -weather'
+    ),
 }
 
 try:
@@ -799,13 +979,15 @@ try:
 except Exception as e:
     logger.error(f"Failed to load gender inequality data: {e}")
 
-# Load Populism Index from separate file
+# Load Populism Index from pre-built file (ISO-3 keyed, same format as liberal/gender)
 try:
     pop_path = ROOT_DIR / 'populism_index.json'
     if pop_path.exists():
         with open(pop_path, 'r') as f:
             INDICATORS_DATA['populism'] = json.load(f)
         logger.info(f"Loaded populism data for {len(INDICATORS_DATA['populism'])} countries")
+    else:
+        logger.warning("populism_index.json not found, skipping populism indicator")
 except Exception as e:
     logger.error(f"Failed to load populism data: {e}")
 
@@ -817,12 +999,14 @@ try:
     liberal_data = INDICATORS_DATA.get('liberal', {})
     gender_data = INDICATORS_DATA.get('gender_inequality', {})
     populism_data = INDICATORS_DATA.get('populism', {})
-    
+
+    logger.info(f"Building combined index from {len(liberal_data)} liberal, {len(gender_data)} gender, {len(populism_data)} populism entries")
+
     # Get all country codes across all indicators
     all_codes = set()
     for dataset in [liberal_data, gender_data, populism_data]:
         all_codes.update(dataset.keys())
-    
+
     for code in all_codes:
         scores = []
         # Liberal Democracy: higher = better (use as-is)
@@ -834,22 +1018,24 @@ try:
         # Populism: higher = more populist (invert so lower populism = better)
         if code in populism_data:
             scores.append(1.0 - populism_data[code]['value'])
-        
+
         if len(scores) == 3:  # Strictly require all 3 indicators
             avg = sum(scores) / len(scores)
             # Get name from any available source
-            name = (liberal_data.get(code, {}).get('name') or 
-                    gender_data.get(code, {}).get('name') or 
+            name = (liberal_data.get(code, {}).get('name') or
+                    gender_data.get(code, {}).get('name') or
                     populism_data.get(code, {}).get('name', code))
             combined_data[code] = {
                 "name": name,
                 "value": round(avg, 3),
                 "year": 2024
             }
-    
+
     if combined_data:
         INDICATORS_DATA['combined'] = combined_data
         logger.info(f"Built combined index for {len(combined_data)} countries")
+    else:
+        logger.warning("Combined index is empty — check that liberal, gender_inequality, and populism data are all loaded with matching country codes")
 except Exception as e:
     logger.error(f"Failed to build combined index: {e}")
 
